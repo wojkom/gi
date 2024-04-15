@@ -1,0 +1,449 @@
+using System;
+using System.Collections.Generic;
+
+class Gradebook
+{
+    public string Name { get; set; }
+    public bool IsWeighted { get; set; }
+}
+
+class Program
+{
+    static List<Gradebook> gradebooks = new List<Gradebook>();
+
+    static void Main()
+    {
+        string command = "";
+        while (true)
+        {
+            Console.WriteLine("Enter command:");
+            command = Console.ReadLine();
+            ProcessCommand(command);
+        }
+    }
+
+    static void ProcessCommand(string command)
+    {
+        string[] commandParts = command.Split(' ');
+
+        switch (commandParts[0].ToLower())
+        {
+            case "create":
+                CreateGradebook(commandParts);
+                break;
+            case "help":
+                ShowHelp();
+                break;
+            case "load":
+                LoadGradebook(commandParts);
+                break;
+            case "quit":
+                Environment.Exit(0);
+                break;
+            default:
+                Console.WriteLine("Invalid command, type 'help' for a list of valid commands.");
+                break;
+        }
+    }
+
+    static void CreateGradebook(string[] commandParts)
+    {
+        string name = commandParts[1];
+        bool isWeighted = bool.Parse(commandParts[2]);
+
+        gradebooks.Add(new Gradebook { Name = name, IsWeighted = isWeighted });
+        Console.WriteLine($"Gradebook '{name}' created successfully.");
+    }
+
+    static void ShowHelp()
+    {
+        Console.WriteLine("Valid commands:");
+        Console.WriteLine("Create `Name of Gradebook` `Is this Gradebook Weighted (true/false)`");
+        Console.WriteLine("Help");
+        Console.WriteLine("Load `Name of Gradebook`");
+        Console.WriteLine("Quit");
+    }
+
+    static void LoadGradebook(string[] commandParts)
+    {
+        string name = commandParts[1];
+        Gradebook gradebook = gradebooks.Find(g => g.Name == name);
+
+        if (gradebook != null)
+        {
+            Console.WriteLine($"Loaded Gradebook '{name}'");
+            // Add more functionality for loading the gradebook here
+        }
+        else
+        {
+            Console.WriteLine($"Gradebook '{name}' not found.");
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+
+class Student
+{
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public string EnrollmentType { get; set; }
+    public List<int> Grades { get; set; }
+
+    public Student(string name, string type, string enrollmentType)
+    {
+        Name = name;
+        Type = type;
+        EnrollmentType = enrollmentType;
+        Grades = new List<int>();
+    }
+}
+
+class GradeBook
+{
+    private List<Student> students = new List<Student>();
+
+    public void AddStudent(string name, string type, string enrollmentType)
+    {
+        students.Add(new Student(name, type, enrollmentType));
+    }
+
+    public void RemoveStudent(string name)
+    {
+        Student student = students.Find(s => s.Name == name);
+        if (student != null)
+        {
+            students.Remove(student);
+        }
+    }
+
+    public void ListStudents()
+    {
+        foreach (Student student in students)
+        {
+            Console.WriteLine($"{student.Name} {student.Type} {student.EnrollmentType}");
+        }
+    }
+
+    public void AddGrade(string name, int score)
+    {
+        Student student = students.Find(s => s.Name == name);
+        if (student != null)
+        {
+            student.Grades.Add(score);
+        }
+    }
+
+    public void RemoveGrade(string name, int score)
+    {
+        Student student = students.Find(s => s.Name == name);
+        if (student != null)
+        {
+            student.Grades.Remove(score);
+        }
+    }
+
+    public void StatisticsAll()
+    {
+        // Calculate and display statistics for all students in the gradebook
+    }
+
+    public void Statistics(string name)
+    {
+        // Calculate and display statistics for the student with the provided name
+    }
+
+    public void Help()
+    {
+        // Display list of all valid commands within this context
+    }
+
+    public void Save()
+    {
+        // Save the open gradebook
+    }
+
+    public void Close()
+    {
+        // Close the gradebook
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        GradeBook gradeBook = new GradeBook();
+
+        // Example usage of the commands
+        gradeBook.AddStudent("John Doe", "Regular", "Full-time");
+        gradeBook.AddGrade("John Doe", 85);
+        gradeBook.AddStudent("Jane Smith", "Honors", "Part-time");
+        gradeBook.RemoveGrade("John Doe", 85);
+        gradeBook.ListStudents();
+
+        // You can continue testing the commands here
+    }
+}
+using System;
+using System.Collections.Generic;
+
+public enum Grade
+{
+    APlus = 4.3,
+    A = 4.0,
+    AMinus = 3.7,
+    BPlus = 3.3,
+    B = 3.0,
+    BMinus = 2.7,
+    CPlus = 2.3,
+    C = 2.0,
+    CMinus = 1.7,
+    D = 1.0,
+    F = 0
+}
+
+public class Student
+{
+    public string Name { get; set; }
+    public List<(Grade grade, double weight)> Grades { get; set; }
+
+    public double CalculateGPA()
+    {
+        double totalGradePoints = 0;
+        double totalWeight = 0;
+
+        foreach (var (grade, weight) in Grades)
+        {
+            totalGradePoints += (double)grade * weight;
+            totalWeight += weight;
+        }
+
+        return totalGradePoints / totalWeight;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Student student1 = new Student
+        {
+            Name = "Alice",
+            Grades = new List<(Grade, double)> { (Grade.A, 3), (Grade.B, 2) }
+        };
+
+        Student student2 = new Student
+        {
+            Name = "Bob",
+            Grades = new List<(Grade, double)> { (Grade.APlus, 4), (Grade.BMinus, 2) }
+        };
+
+        Console.WriteLine($"{student1.Name}'s GPA: {student1.CalculateGPA():F2}");
+        Console.WriteLine($"{student2.Name}'s GPA: {student2.CalculateGPA():F2}");
+    }
+}
+namespace GradeBook.Enums
+{
+    public enum GradeBookType
+    {
+        Standard,
+        Ranked,
+        ESNU,
+        OneToFour,
+        SixPoint
+    }
+}
+
+namespace GradeBook.GradeBooks
+{
+    public class StandardGradeBook : BaseGradeBook
+    {
+        public StandardGradeBook(string name) : base(name)
+        {
+            Type = GradeBookType.Standard;
+        }
+    }
+
+    public class RankedGradeBook : BaseGradeBook
+    {
+        public RankedGradeBook(string name) : base(name)
+        {
+            Type = GradeBookType.Ranked;
+        }
+
+        public override char GetLetterGrade(double averageGrade)
+        {
+            // Implement graded logic based on student rankings here
+        }
+
+        public override void CalculateStatistics()
+        {
+            // Short circuit if less than 5 students
+        }
+
+        public override void CalculateStudentStatistics(string name)
+        {
+            // Short circuit if less than 5 students
+        }
+    }
+
+    public abstract class BaseGradeBook
+    {
+        public GradeBookType Type { get; set; }
+        public bool IsWeighted { get; set; }
+
+        public BaseGradeBook(string name, bool isWeighted)
+        {
+            Name = name;
+            IsWeighted = isWeighted;
+        }
+
+        public abstract char GetLetterGrade(double averageGrade);
+
+        public virtual void CalculateStatistics()
+        {
+            // Calculate statistics
+        }
+
+        public virtual void CalculateStudentStatistics(string name)
+        {
+            // Calculate student statistics
+        }
+
+        public double GetGPA(string name)
+        {
+            double gpa = 0.0;
+            // Calculate GPA logic here
+
+            return gpa;
+        }
+    }
+}
+
+public class StartingUserInterface
+{
+    public BaseGradeBook CreateCommand(string name, GradeBookType type, bool isWeighted)
+    {
+        if (type == GradeBookType.Standard)
+        {
+            return new StandardGradeBook(name, isWeighted);
+        }
+        else if (type == GradeBookType.Ranked)
+        {
+            return new RankedGradeBook(name, isWeighted);
+        }
+        else
+        {
+            Console.WriteLine($"{type} is not a supported type of gradebook, please try again");
+            return null;
+        }
+    }
+
+    public void HelpCommand()
+    {
+        Console.WriteLine("Create 'Name' 'Type' 'Weighted' - Creates a new gradebook where 'Name' is the name of the gradebook, 'Type' is what type of grading it should use, and 'Weighted' is whether or not grades should be weighted (true or false).");
+    }
+}
+namespace GradeBook.Enums
+{
+    public enum GradeBookType
+    {
+        Standard,
+        Ranked,
+        ESNU,
+        OneToFour,
+        SixPoint
+    }
+}
+
+namespace GradeBook.GradeBooks
+{
+    public class StandardGradeBook : BaseGradeBook
+    {
+        public StandardGradeBook(string name) : base(name)
+        {
+            Type = GradeBookType.Standard;
+        }
+    }
+
+    public class RankedGradeBook : BaseGradeBook
+    {
+        public RankedGradeBook(string name) : base(name)
+        {
+            Type = GradeBookType.Ranked;
+        }
+
+        public override char GetLetterGrade(double averageGrade)
+        {
+            // Implement graded logic based on student rankings here
+        }
+
+        public override void CalculateStatistics()
+        {
+            // Short circuit if less than 5 students
+        }
+
+        public override void CalculateStudentStatistics(string name)
+        {
+            // Short circuit if less than 5 students
+        }
+    }
+
+    public abstract class BaseGradeBook
+    {
+        public GradeBookType Type { get; set; }
+        public bool IsWeighted { get; set; }
+
+        public BaseGradeBook(string name, bool isWeighted)
+        {
+            Name = name;
+            IsWeighted = isWeighted;
+        }
+
+        public abstract char GetLetterGrade(double averageGrade);
+
+        public virtual void CalculateStatistics()
+        {
+            // Calculate statistics
+        }
+
+        public virtual void CalculateStudentStatistics(string name)
+        {
+            // Calculate student statistics
+        }
+
+        public double GetGPA(string name)
+        {
+            double gpa = 0.0;
+            // Calculate GPA logic here
+
+            return gpa;
+        }
+    }
+}
+
+public class StartingUserInterface
+{
+    public BaseGradeBook CreateCommand(string name, GradeBookType type, bool isWeighted)
+    {
+        if (type == GradeBookType.Standard)
+        {
+            return new StandardGradeBook(name, isWeighted);
+        }
+        else if (type == GradeBookType.Ranked)
+        {
+            return new RankedGradeBook(name, isWeighted);
+        }
+        else
+        {
+            Console.WriteLine($"{type} is not a supported type of gradebook, please try again");
+            return null;
+        }
+    }
+
+    public void HelpCommand()
+    {
+        Console.WriteLine("Create 'Name' 'Type' 'Weighted' - Creates a new gradebook where 'Name' is the name of the gradebook, 'Type' is what type of grading it should use, and 'Weighted' is whether or not grades should be weighted (true or false).");
+    }
+}
